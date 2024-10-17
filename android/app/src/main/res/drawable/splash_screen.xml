@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/primary"/>
+
+    <item
+        android:width="200dp"
+        android:height="200dp"
+        android:drawable="@drawable/logo_rounded_negative"
+        android:gravity="center"
+        />
+
+    <!-- <item
+        android:width="100dp"
+        android:height="50dp"
+        android:drawable="@drawable/name_negative"
+        android:gravity="center_horizontal|bottom"
+        android:layout_marginBottom="5dp"
+        /> -->
+
+</layer-list>
