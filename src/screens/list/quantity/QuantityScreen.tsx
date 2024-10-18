@@ -64,6 +64,7 @@ const QuantityScreen = ({ item }: Props) => {
     navigator.close('ProductsScreen')
     navigator.close('CategoryScreen')
     navigator.close('QuantityScreen')
+    // navigator.back(3)
 
   }
 

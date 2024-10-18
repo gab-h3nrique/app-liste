@@ -41,6 +41,7 @@ interface ContextValue {
     open: (name: string, props?: any)=> void,
     change: (name: string, props?: any)=> void,
     close: (name: string | string[])=> void,
+    back: (rollback: number)=> void,
     pop: ()=> void,
 }
 
@@ -108,6 +109,7 @@ const Navigator = ({ tab: Tab, children }: Props) => {
     //         },
     //     }),
     // ).current;
+
 
     const open = useCallback((name: string, props?: {}) => {
 
@@ -185,6 +187,44 @@ const Navigator = ({ tab: Tab, children }: Props) => {
 
     },[])
 
+    const back = useCallback((rollback: number) => {
+
+        (async()=>{
+
+            setConfig((prev: any) => {
+
+                if(prev.stacks.length, rollback > 1) return { ...prev, stacks: prev.stacks.splice((prev.stacks.length - 1) - rollback, rollback - 1) };
+                else return prev;
+                
+            });
+
+            
+        })().then(()=>{
+
+            lastPositionScreen.setValue(- (width / 4));
+            Animated.timing(lastPositionScreen, { toValue: 0, duration: DURATION_TRASITION, useNativeDriver: true }).start();
+            
+            positionScreen.setValue(0)
+            Animated.timing(positionScreen, { toValue: width, duration: DURATION_TRASITION, useNativeDriver: true}).start();
+
+            setTimeout(()=> {
+    
+                setConfig((prev: any) => {
+    
+                    if(prev.stacks.length > 1) return { ...prev, stacks: prev.stacks.slice(0, prev.stacks.length - 1) };
+                    else return prev;
+                    
+                });
+    
+            }, DURATION_TRASITION)
+
+        })
+
+
+
+
+    },[])
+
     const pop = useCallback(() => {
 
         positionScreen.setValue(0)
@@ -230,7 +270,7 @@ const Navigator = ({ tab: Tab, children }: Props) => {
 
     
 
-    const contextValue: ContextValue = useMemo(() => ({ open, change, close, pop, }), []);
+    const contextValue: ContextValue = useMemo(() => ({ open, change, close, back, pop }), []);
 
     const onBackPress = () => {
 
@@ -263,8 +303,8 @@ const Navigator = ({ tab: Tab, children }: Props) => {
                     let translateX: any = 0;
 
 
-                    // screen behind current
-                    if(index === (config.stacks.length -2)) translateX = lastPositionScreen
+                    // screens behind current
+                    if(index <= (config.stacks.length -2)) translateX = lastPositionScreen
 
                     // current screen
                     if(index === (config.stacks.length -1) && index > 0) translateX = positionScreen
