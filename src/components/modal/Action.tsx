@@ -1,4 +1,4 @@
-import { View, Text, Animated, PanResponder, NativeModules } from 'react-native'
+import { View, Text, Animated, PanResponder, NativeModules, Platform } from 'react-native'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import tw from '../../libs/tailwind'
 import Button from '../buttons/Button'
@@ -6,7 +6,7 @@ import Button from '../buttons/Button'
 
 const {UIManager} = NativeModules;
 
-UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager && UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 interface Props {
 
@@ -16,6 +16,8 @@ interface Props {
 }
 
 const Action = ({ children, height }: Props) => {
+
+    const difference = Platform.OS === 'android' ? 45 : 75
 
 
     const sizeScreen = useRef(0)
@@ -43,7 +45,8 @@ const Action = ({ children, height }: Props) => {
 
                 
                 // const porcent = 100 - ((gestureState.moveY / sizeScreen.current) * 100)
-                const size = sizeScreen.current - gestureState.moveY + 80
+                const size = sizeScreen.current - gestureState.moveY + difference
+                // const size = sizeScreen.current - gestureState.moveY + 80
                 
                 
                 // setViewHeight(() => porcent + 9)
@@ -54,7 +57,7 @@ const Action = ({ children, height }: Props) => {
             onPanResponderRelease: (evt, gestureState) => {
 
                 const porcent = 100 - ((gestureState.moveY / sizeScreen.current) * 100)
-                const size = sizeScreen.current - gestureState.moveY + 80
+                const size = sizeScreen.current - gestureState.moveY + difference
     
                 // if((porcent + 9) <= 30) setViewHeight(() => 30)
 
