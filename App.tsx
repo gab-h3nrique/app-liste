@@ -17,8 +17,11 @@ import { DataStorageProvider } from './src/context/StorageDataProvider';
 import ListProvider from './src/context/ListProvider';
 import EditItemScreen from './src/screens/list/editItem/EditItemScreen';
 import SelectListToMap from './src/screens/map/SelectListToMap';
+import Location from './src/utils/location';
 
 function App(): JSX.Element {
+
+  Location.requestAuthorization()
   
   return (
     

@@ -169,21 +169,26 @@ const Navigator = ({ tab: Tab, children }: Props) => {
 
     const close = useCallback((name: string | string[]) => {
 
+
+        lastPositionScreen.setValue(- (width / 4));
+        Animated.timing(lastPositionScreen, { toValue: 0, duration: DURATION_TRASITION, useNativeDriver: true }).start();
+
         positionScreen.setValue(0);
         Animated.timing(positionScreen, { toValue: width, duration: DURATION_TRASITION, useNativeDriver: true, }).start(() => {
 
-            // startTransition(() => {
-  
+            startTransition(() => {
+    
                 setConfig(prev => {
 
                     if(prev.stacks.length > 1) return { ...prev, stacks: prev.stacks.filter((e)=> !name.includes(e.name)) };
                     else return prev;
                     
                 });
-
-            // })
-  
+            })
+    
         });
+
+
 
     },[])
 
@@ -191,31 +196,35 @@ const Navigator = ({ tab: Tab, children }: Props) => {
 
         (async()=>{
 
+            
             setConfig((prev: any) => {
 
                 if(prev.stacks.length, rollback > 1) return { ...prev, stacks: prev.stacks.splice((prev.stacks.length - 1) - rollback, rollback - 1) };
                 else return prev;
                 
             });
+            
+
 
             
         })().then(()=>{
 
-            lastPositionScreen.setValue(- (width / 4));
-            Animated.timing(lastPositionScreen, { toValue: 0, duration: DURATION_TRASITION, useNativeDriver: true }).start();
-            
             positionScreen.setValue(0)
             Animated.timing(positionScreen, { toValue: width, duration: DURATION_TRASITION, useNativeDriver: true}).start();
 
+            lastPositionScreen.setValue(- (width / 4));
+            Animated.timing(lastPositionScreen, { toValue: 0, duration: DURATION_TRASITION, useNativeDriver: true }).start();
+
             setTimeout(()=> {
-    
+
                 setConfig((prev: any) => {
     
                     if(prev.stacks.length > 1) return { ...prev, stacks: prev.stacks.slice(0, prev.stacks.length - 1) };
                     else return prev;
                     
                 });
-    
+                
+                
             }, DURATION_TRASITION)
 
         })

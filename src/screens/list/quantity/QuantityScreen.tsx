@@ -61,9 +61,8 @@ const QuantityScreen = ({ item }: Props) => {
 
     saveSelectedList({...selectedList, itens: [newItem, ...selectedList.itens]})
 
-    navigator.close('ProductsScreen')
-    navigator.close('CategoryScreen')
-    navigator.close('QuantityScreen')
+
+    navigator.close(['CategoryScreen', 'ProductsScreen', 'QuantityScreen'])
     // navigator.back(3)
 
   }

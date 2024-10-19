@@ -1,13 +1,6 @@
 import { View, Text, StyleSheet, Animated, PanResponder, Dimensions, useWindowDimensions, FlatList, TextInput } from 'react-native'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import tw from '../../libs/tailwind'
-
-import MapView, {Marker, PROVIDER_GOOGLE, Geojson} from 'react-native-maps';
-// import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
-
-
-
-
 import { useTheme } from '../../context/ThemeProvider';
 import Button from '../../components/buttons/Button';
 import ArrowSvg from '../../components/svg/icons/ArrowSvg';
@@ -18,6 +11,11 @@ import MarketItem from './components/MarketItem';
 import SearchSvg from '../../components/svg/icons/SearchSvg';
 import Action from '../../components/modal/Action';
 
+import MapView, {Marker, PROVIDER_GOOGLE, Geojson} from 'react-native-maps';
+import Location from '../../utils/location';
+
+
+
 
 const MapScreen = () => {
 
@@ -25,52 +23,27 @@ const MapScreen = () => {
 
   const navigator = useNavigation()
 
-  // const [ userLocation, setUserLocation ] = useState<GeolocationResponse>()
+  const [ position, setPosition ] = useState({ longitude: 0, latitude: 0})
 
-  
+  const mapLocation = Location.getPosition()
 
+  function getPosition() {
 
-  // console.log(Geojson)
+    const { latitude, longitude } = Location.getPosition()
 
+    if(!latitude || !longitude) return
 
+    setPosition({ latitude, longitude })
 
-  // Geolocation.getCurrentPosition(location => setUserLocation(location));
+  }
 
-  // console.log('coordss', userLocation)
+  const markets: any[] = [1,2,3,4,5]
 
+  useEffect(()=> {
 
-  
-  
+    getPosition()
 
-  const markets = [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-  ]
+  }, [])
 
   return (
 
@@ -83,20 +56,22 @@ const MapScreen = () => {
       <View style={tw`flex w-full h-full z-0`}>
 
         <MapView provider={PROVIDER_GOOGLE} style={styles.map}  initialRegion={{     
-            latitude: -19.752537,
-            longitude: -43.958235,
+            latitude: mapLocation.latitude || 0,
+            longitude: mapLocation.longitude || 0,
+            // latitude: -19.751457,
+            // longitude: -43.9601293,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }
         }>
-          {/* <Marker coordinate={userLocation} title='aa' description='bbb' image={{uri: 'https://cdn-icons-png.flaticon.com/512/3306/3306079.png'}}/> */}
+          <Marker coordinate={position} title='aa' description='bbb' image={{uri: 'https://cdn-icons-png.flaticon.com/512/3306/3306079.png'}}/>
         </MapView>
         
       </View>
 
       <Action>
 
-        <Button onPress={navigator.pop} style={tw`absolute -top-10 left-4 px-4 h-8 flex flex-row gap-2 rounded-full bg-slate-400 dark:bg-slate-700 flex items-center justify-center`} >
+        <Button style={tw`absolute -top-10 left-4 px-4 h-8 flex flex-row gap-2 rounded-full bg-slate-400 dark:bg-slate-700 flex items-center justify-center`} >
           <Text style={tw`text-white dark:text-slate-300 text-[.8rem] font-bold`}>Distância</Text>
           <ChevronSvg height={15} width={15} fill={theme == 'dark' ? '#CBD5E1':'#ffffff'} marginLeft={"auto"} style={{ transform: [{ rotate: '90deg' }] }}/>
         </Button>
